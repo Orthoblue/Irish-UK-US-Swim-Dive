@@ -149,7 +149,7 @@ function auburn(){
   var best={};rs.forEach(function(r){if(r.sc==null||r.st)return;var k=r.n+"|"+r.e;if(!best[k]||r.sc>best[k].sc)best[k]=r;});
   var divers={};rs.forEach(function(r){divers[r.n]=1;});
   var podium=rs.filter(function(r){return isFinal(r)&&r.p&&r.p<=3;});
-  var h="<div class='meet au'><h3>Auburn Tigers diving</h3><p class='muted'>Matthew Hamilton's Auburn teammates on the boards. "+Object.keys(divers).length+" Auburn divers, "+rs.length+" results in this dataset. Next: USA Diving Winter Nationals, Dec. 11–15, Midland, Texas (qualifier Dec. 9–10).</p>";
+  var h="<div class='meet au'><h3>Auburn Diving</h3><p class='muted'>"+Object.keys(divers).length+" Auburn divers, "+rs.length+" results in this dataset. Next: USA Diving Winter Nationals, Dec. 11–15, Midland, Texas (qualifier Dec. 9–10).</p>";
   h+="<p><b>Podiums:</b> "+(podium.map(function(r){return esc(r.n)+" — "+esc(gname(r.g))+" "+esc(r.e)+" "+r.p+(r.p===1?"st":r.p===2?"nd":"rd")+" ("+fmt(r.sc)+", "+esc(MID[r.m].n)+")";}).join("; ")||"none yet")+"</p>";
   h+="<p class='muted'>Meet recap: <a href='https://orthoblue.github.io/Irish-UK-US-Swim-Dive/articles/2026-11-20-tennessee-diving-invitational/' target='_blank' rel='noopener'>Hubred, Landi and Hallifax podium at the Tennessee Invitational</a> (Aubie).</p></div>";
   var bl=Object.values(best).sort(function(a,b){return a.e.localeCompare(b.e)||b.sc-a.sc;});
