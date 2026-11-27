@@ -1,0 +1,65 @@
+---
+layout: default
+title: Diving Weekly
+permalink: /diving/
+description: Weekly diving stories from the US, the UK, and Ireland.
+---
+<header class="page-head">
+  <p class="eyebrow">Diving</p>
+  <h1>Diving Weekly</h1>
+  <p class="lede">A weekly roundup of diving in the US, the UK, and Ireland, newest first.</p>
+</header>
+
+{% include select-diving.html %}
+<form class="filters filters-simple" id="article-filters" action="{{ '/diving/' | relative_url }}" method="get" role="search">
+  <label class="filter-field filter-search">Search
+    <input id="filter-q" type="search" name="q" placeholder="Diver, place, or title" autocomplete="off">
+  </label>
+  <label class="filter-field">Region
+    <select id="filter-region" name="region"><option value="">All regions</option></select>
+  </label>
+</form>
+<div class="filter-bar">
+  <p class="filter-status" id="filter-status" aria-live="polite"></p>
+  <button type="button" class="filter-clear" id="filter-clear" hidden>Clear filters</button>
+</div>
+<script type="application/json" id="article-index">{% include diving-json.html %}</script>
+<div id="article-list" data-noun="story">
+{% assign shown = 0 %}
+{% assign current_year = "" %}
+{% assign opened = false %}
+{% for article in diving_articles %}
+  {% assign shown = shown | plus: 1 %}
+  {% if article.date %}
+    {% assign year = article.date | date: "%Y" %}
+  {% else %}
+    {% assign year = article.name | split: "-" | first %}
+  {% endif %}
+  {% assign year_num = year | plus: 0 %}
+  {% if year.size != 4 or year_num < 1900 %}
+    {% assign year = "Other" %}
+  {% endif %}
+  {% if year != current_year %}
+    {% if opened %}</div></section>{% endif %}
+    <section class="year-group">
+      <h2 class="year-heading">{{ year }}</h2>
+      <div class="story-list">
+    {% assign current_year = year %}
+    {% assign opened = true %}
+  {% endif %}
+  {% include article-card.html article=article %}
+{% endfor %}
+{% if opened %}</div></section>{% endif %}
+</div>
+<p class="empty" id="filter-empty" hidden>No diving stories match these filters.</p>
+{% if shown == 0 %}
+<p class="empty">No diving stories yet. New ones appear here when a Markdown file is added to diving/articles.</p>
+{% endif %}
+
+<aside class="promo">
+  <div>
+    <p class="kicker">Results</p>
+    <p>Scores from college meets and international competitions are on the diving results dashboard.</p>
+  </div>
+  <a class="button" href="{{ '/diving/dashboard/' | relative_url }}">Diving results</a>
+</aside>

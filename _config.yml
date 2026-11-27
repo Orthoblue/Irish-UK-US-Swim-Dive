@@ -32,3 +32,10 @@ defaults:
     values:
       layout: article
       body_class: article
+  - scope:
+      path: "diving/articles"
+      type: "pages"
+    values:
+      layout: article
+      body_class: article
+      kicker: "Diving weekly"

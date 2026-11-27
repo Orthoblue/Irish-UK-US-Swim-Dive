@@ -1,7 +1,19 @@
 {%- assign here = page.url | default: "/" -%}
+{%- assign on_swim_articles = false -%}
+{%- if here contains "/articles" -%}
+  {%- unless here contains "/diving/" -%}
+    {%- assign on_swim_articles = true -%}
+  {%- endunless -%}
+{%- endif -%}
+{%- assign on_diving_weekly = false -%}
+{%- if here == "/diving/" or here == "/diving/index.html" or here contains "/diving/articles" -%}
+  {%- assign on_diving_weekly = true -%}
+{%- endif -%}
 <ul class="nav-list">
   <li><a href="{{ '/' | relative_url }}"{% if here == "/" or here == "/index.html" %} aria-current="page"{% endif %}>Home</a></li>
-  <li><a href="{{ '/articles/' | relative_url }}"{% if here contains "/articles" %} aria-current="page"{% endif %}>Articles</a></li>
+  <li><a href="{{ '/articles/' | relative_url }}"{% if on_swim_articles %} aria-current="page"{% endif %}>Articles</a></li>
   <li><a href="{{ '/results/' | relative_url }}"{% if here contains "/results" %} aria-current="page"{% endif %}>Results</a></li>
+  <li><a href="{{ '/diving/' | relative_url }}"{% if on_diving_weekly %} aria-current="page"{% endif %}>Diving Weekly</a></li>
+  <li><a href="{{ '/diving/dashboard/' | relative_url }}"{% if here contains "/diving/dashboard" %} aria-current="page"{% endif %}>Diving Results</a></li>
   <li><a href="{{ '/about/' | relative_url }}"{% if here contains "/about" %} aria-current="page"{% endif %}>About</a></li>
 </ul>

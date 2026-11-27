@@ -1,0 +1,25 @@
+{
+ "built": "2026-11-27 11:14 CT",
+ "rows": 7643,
+ "meets": 176,
+ "divers": 2480,
+ "by_region": {
+  "US": 6171,
+  "UK": 1378,
+  "International": 94
+ },
+ "by_level": {
+  "university": 6171,
+  "regional": 532,
+  "international": 700,
+  "national": 240
+ },
+ "by_region_level_meets": {
+  "US|university": 171,
+  "UK|regional": 2,
+  "UK|international": 1,
+  "UK|national": 1,
+  "International|international": 1
+ },
+ "latest_date": "2026-11-22"
+}

@@ -3,7 +3,7 @@ layout: default
 ---
 <article class="recap">
   <header class="recap-head">
-    <p class="kicker">{% if page.meet and page.meet != "" %}{{ page.meet | escape }}{% else %}Meet recap{% endif %}</p>
+    <p class="kicker">{% if page.meet and page.meet != "" %}{{ page.meet | escape }}{% elsif page.kicker and page.kicker != "" %}{{ page.kicker | escape }}{% else %}Meet recap{% endif %}</p>
     {%- if page.title and page.title != "" -%}
     <h1>{{ page.title | escape }}</h1>
     {%- endif -%}

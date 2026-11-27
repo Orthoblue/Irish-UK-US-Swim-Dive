@@ -1,0 +1,34 @@
+{%- comment -%}
+  Diving Weekly articles, newest front-matter date first. Same-day ties
+  follow the title. These pages stay out of the swimming article lists.
+{%- endcomment -%}
+{%- assign diving_pool = "" | split: "," | shift -%}
+{%- for item in site.pages -%}
+  {%- assign parts = item.path | split: "/" -%}
+  {%- assign ext = item.name | split: "." | last -%}
+  {%- if parts[0] == "diving" and parts[1] == "articles" and ext == "md" and item.name != "index.md" -%}
+    {%- assign diving_pool = diving_pool | push: item -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign diving_keys = "" | split: "," | shift -%}
+{%- for article in diving_pool -%}
+  {%- if article.date -%}
+    {%- assign ymd = article.date | date: "%Y%m%d" -%}
+  {%- else -%}
+    {%- assign ymd = article.name | slice: 0, 10 | remove: "-" -%}
+  {%- endif -%}
+  {%- assign inv = 99999999 | minus: ymd -%}
+  {%- if article.title and article.title != "" -%}
+    {%- assign title_key = article.title | downcase | strip | replace: "~", " " -%}
+  {%- else -%}
+    {%- assign title_key = article.name | downcase | replace: "~", " " -%}
+  {%- endif -%}
+  {%- assign key = inv | append: "~" | append: title_key | append: "~" | append: forloop.index0 -%}
+  {%- assign diving_keys = diving_keys | push: key -%}
+{%- endfor -%}
+{%- assign diving_keys = diving_keys | sort -%}
+{%- assign diving_articles = "" | split: "," | shift -%}
+{%- for key in diving_keys -%}
+  {%- assign idx = key | split: "~" | last | plus: 0 -%}
+  {%- assign diving_articles = diving_articles | push: diving_pool[idx] -%}
+{%- endfor -%}
