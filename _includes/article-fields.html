@@ -1,0 +1,105 @@
+{%- comment -%}
+  Sets field_slug, field_title, field_date, field_meet, field_location,
+  field_summary, field_region, field_clubs, and field_swimmers for include.item.
+  Clubs and swimmers are the union of front matter and _data/article_tags.yml.
+  Region uses front matter, then the data file. An Auburn article with no
+  region is USA.
+{%- endcomment -%}
+{%- assign item = include.item -%}
+{%- assign field_slug = item.name | split: "." | first -%}
+{%- assign extra = site.data.article_tags[field_slug] -%}
+{%- if item.title and item.title != "" -%}
+  {%- assign field_title = item.title | strip -%}
+{%- else -%}
+  {%- assign field_title = field_slug -%}
+{%- endif -%}
+{%- if item.date -%}
+  {%- assign field_date = item.date | date: "%Y-%m-%d" -%}
+{%- else -%}
+  {%- assign field_date = item.name | slice: 0, 10 -%}
+{%- endif -%}
+{%- assign field_meet = item.meet | default: "" | strip -%}
+{%- assign field_location = item.location | default: "" | strip -%}
+{%- assign field_summary = item.summary | default: "" | strip -%}
+{%- assign field_region = "" -%}
+{%- if item.region and item.region != "" -%}
+  {%- assign field_region = item.region | strip -%}
+{%- elsif extra.region and extra.region != "" -%}
+  {%- assign field_region = extra.region | strip -%}
+{%- endif -%}
+{%- assign field_clubs = "" | split: "," | shift -%}
+{%- assign field_swimmers = "" | split: "," | shift -%}
+{%- assign name_sources = "" | split: "," | shift -%}
+{%- if item.clubs -%}
+  {%- assign name_sources = name_sources | push: item.clubs -%}
+{%- endif -%}
+{%- if extra.clubs -%}
+  {%- assign name_sources = name_sources | push: extra.clubs -%}
+{%- endif -%}
+{%- for source in name_sources -%}
+  {%- assign source_join = source | join: "" -%}
+  {%- assign source_size = source | size -%}
+  {%- assign join_size = source_join | size -%}
+  {%- if source_size == join_size and source_size > 0 -%}
+    {%- assign one_name = source | strip -%}
+    {%- if one_name != "" -%}
+      {%- assign already = false -%}
+      {%- for existing in field_clubs -%}
+        {%- if existing == one_name -%}{% assign already = true %}{%- endif -%}
+      {%- endfor -%}
+      {%- unless already -%}{% assign field_clubs = field_clubs | push: one_name %}{%- endunless -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- for name in source -%}
+      {%- assign one_name = name | strip -%}
+      {%- if one_name != "" -%}
+        {%- assign already = false -%}
+        {%- for existing in field_clubs -%}
+          {%- if existing == one_name -%}{% assign already = true %}{%- endif -%}
+        {%- endfor -%}
+        {%- unless already -%}{% assign field_clubs = field_clubs | push: one_name %}{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign name_sources = "" | split: "," | shift -%}
+{%- if item.swimmers -%}
+  {%- assign name_sources = name_sources | push: item.swimmers -%}
+{%- endif -%}
+{%- if extra.swimmers -%}
+  {%- assign name_sources = name_sources | push: extra.swimmers -%}
+{%- endif -%}
+{%- for source in name_sources -%}
+  {%- assign source_join = source | join: "" -%}
+  {%- assign source_size = source | size -%}
+  {%- assign join_size = source_join | size -%}
+  {%- if source_size == join_size and source_size > 0 -%}
+    {%- assign one_name = source | strip -%}
+    {%- if one_name != "" -%}
+      {%- assign already = false -%}
+      {%- for existing in field_swimmers -%}
+        {%- if existing == one_name -%}{% assign already = true %}{%- endif -%}
+      {%- endfor -%}
+      {%- unless already -%}{% assign field_swimmers = field_swimmers | push: one_name %}{%- endunless -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- for name in source -%}
+      {%- assign one_name = name | strip -%}
+      {%- if one_name != "" -%}
+        {%- assign already = false -%}
+        {%- for existing in field_swimmers -%}
+          {%- if existing == one_name -%}{% assign already = true %}{%- endif -%}
+        {%- endfor -%}
+        {%- unless already -%}{% assign field_swimmers = field_swimmers | push: one_name %}{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if field_region == "" -%}
+  {%- for club in field_clubs -%}
+    {%- assign club_key = club | downcase -%}
+    {%- if club_key == "auburn university" -%}
+      {%- assign field_region = "USA" -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

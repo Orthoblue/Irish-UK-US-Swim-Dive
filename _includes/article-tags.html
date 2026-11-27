@@ -1,0 +1,10 @@
+{%- if field_region != "" or field_clubs.size > 0 -%}
+<p class="story-tags">
+  {%- if field_region != "" -%}
+  <a class="tag" href="{{ '/articles/' | relative_url }}?region={{ field_region | url_encode }}">{{ field_region | escape }}</a>
+  {%- endif -%}
+  {%- for club in field_clubs -%}
+  <a class="tag" href="{{ '/articles/' | relative_url }}?club={{ club | url_encode }}">{{ club | escape }}</a>
+  {%- endfor -%}
+</p>
+{%- endif -%}

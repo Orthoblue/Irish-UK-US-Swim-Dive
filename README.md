@@ -8,7 +8,9 @@ The public site is [https://orthoblue.github.io/Irish-UK-US-Swim-Dive/](https://
 
 ## Add an article
 
-Commit a Markdown file to `articles/` on `main`. No other change is required. The home page and the articles archive list it automatically, newest first.
+Commit a Markdown file to `articles/` on `main`. No other change is required. The home page and the articles archive list it automatically.
+
+Lists are ordered by the front-matter `date` (the meet’s final day), newest first. Articles from the same day are ordered by title.
 
 **Path:** `articles/YYYY-MM-DD-meet-slug.md`
 
@@ -22,6 +24,12 @@ title: "Headline"
 date: 2026-11-21
 meet: "Meet name"
 location: "City"
+region: "Northern Ireland"
+clubs:
+  - Lisburn City Swimming Club
+swimmers:
+  - Dylan Registe
+  - Eoghan McQuillan
 summary: "One or two sentences for the home page."
 ---
 
@@ -30,13 +38,36 @@ summary: "One or two sentences for the home page."
 The story, then results tables, then a Sources list of URLs.
 ```
 
-- `date` is an unquoted `YYYY-MM-DD`.
-- `title`, `meet`, `location`, and `summary` are optional. A missing title falls back to the file name, and a missing date falls back to the date in the file name.
+- `date` is an unquoted `YYYY-MM-DD`. It is the date used for ordering.
+- `title`, `meet`, `location`, `summary`, `region`, `clubs`, and `swimmers` are optional.
+- `region` is a short label such as `Northern Ireland`, `South West England`, `Ireland`, or `USA`.
+- `clubs` and `swimmers` are YAML lists. Name the swimmers the story is about, not every row of a results table.
+- An article with no `region` whose club is `Auburn University` is treated as `USA`.
+- A missing title falls back to the file name, and a missing date falls back to the date in the file name.
 - Keep the opening `#` headline. It repeats `title`, and the site shows that title once.
 - Wide results tables scroll sideways on small screens.
 - Quote any value that contains a colon.
 - The file needs the `---` front matter block so it is treated as a page. Extra fields are fine.
 - A file whose name starts with `_`, or one with `published: false` in the front matter, is left unpublished.
+
+The Articles page can filter by region, club, swimmer, and meet, and can search the text. A filtered view is a normal link, for example `/articles/?region=Northern+Ireland&club=Lisburn+City+Swimming+Club`. Region and club tags on each card and article open that view.
+
+### Tags for articles that are already published
+
+Files in `articles/` are synced from writers’ folders. A repo copy that differs is overwritten, so do not add tags by editing those files in the repo.
+
+Put tags for an existing file in [`_data/article_tags.yml`](_data/article_tags.yml). The key is the filename without `.md`. Those lists are merged with any `clubs` and `swimmers` in the article. A `region` in this file is used only when the article does not set one.
+
+```yaml
+"2026-11-21-wolfpack-elite-invitational":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Zoey Zeller
+```
+
+Writers adding a new recap should put `region`, `clubs`, and `swimmers` in the article’s own front matter, as in the example above. The data file is the backfill for files that cannot be edited here.
 
 ## Pages
 

@@ -60,3 +60,183 @@
     return "Results table " + (index + 1);
   }
 })();
+
+(function () {
+  var form = document.getElementById("article-filters");
+  var dataNode = document.getElementById("article-index");
+  if (!form || !dataNode) return;
+
+  var index = [];
+  try {
+    index = JSON.parse(dataNode.textContent);
+  } catch (error) {
+    return;
+  }
+
+  var bySlug = {};
+  for (var i = 0; i < index.length; i++) bySlug[index[i].slug] = index[i];
+
+  var qInput = document.getElementById("filter-q");
+  var regionSelect = document.getElementById("filter-region");
+  var clubSelect = document.getElementById("filter-club");
+  var swimmerSelect = document.getElementById("filter-swimmer");
+  var meetSelect = document.getElementById("filter-meet");
+  var status = document.getElementById("filter-status");
+  var clearButton = document.getElementById("filter-clear");
+  var empty = document.getElementById("filter-empty");
+  var cards = document.querySelectorAll("#article-list .story");
+
+  fillSelect(regionSelect, unique(index, "region"));
+  fillSelect(clubSelect, uniqueList(index, "clubs"));
+  fillSelect(swimmerSelect, uniqueList(index, "swimmers"));
+  fillSelect(meetSelect, unique(index, "meet"));
+
+  var params = new URLSearchParams(window.location.search);
+  qInput.value = params.get("q") || "";
+  setSelect(regionSelect, params.get("region") || "");
+  setSelect(clubSelect, params.get("club") || "");
+  setSelect(swimmerSelect, params.get("swimmer") || "");
+  setSelect(meetSelect, params.get("meet") || "");
+
+  form.addEventListener("submit", function (event) { event.preventDefault(); apply(); });
+  qInput.addEventListener("input", apply);
+  regionSelect.addEventListener("change", apply);
+  clubSelect.addEventListener("change", apply);
+  swimmerSelect.addEventListener("change", apply);
+  meetSelect.addEventListener("change", apply);
+  clearButton.addEventListener("click", function () {
+    qInput.value = "";
+    regionSelect.value = "";
+    clubSelect.value = "";
+    swimmerSelect.value = "";
+    meetSelect.value = "";
+    apply();
+  });
+
+  apply();
+
+  function apply() {
+    var q = qInput.value.trim().toLowerCase();
+    var region = regionSelect.value;
+    var club = clubSelect.value;
+    var swimmer = swimmerSelect.value;
+    var meet = meetSelect.value;
+    var shown = 0;
+
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var item = bySlug[card.getAttribute("data-slug")];
+      var match = !item || matches(item, q, region, club, swimmer, meet);
+      card.hidden = !match;
+      if (match) shown += 1;
+    }
+
+    var groups = document.querySelectorAll("#article-list .year-group");
+    for (var g = 0; g < groups.length; g++) {
+      groups[g].hidden = !groups[g].querySelector(".story:not([hidden])");
+    }
+
+    var filtering = q || region || club || swimmer || meet;
+    if (status) {
+      var noun = shown === 1 ? "recap" : "recaps";
+      status.textContent = filtering ? shown + " " + noun + (shown === 1 ? " matches" : " match") : shown + " " + noun;
+    }
+    if (empty) empty.hidden = shown !== 0;
+    if (clearButton) clearButton.hidden = !filtering;
+
+    var next = new URLSearchParams();
+    if (q) next.set("q", qInput.value.trim());
+    if (region) next.set("region", region);
+    if (club) next.set("club", club);
+    if (swimmer) next.set("swimmer", swimmer);
+    if (meet) next.set("meet", meet);
+    var query = next.toString();
+    var url = window.location.pathname + (query ? "?" + query : "") + window.location.hash;
+    if (url !== window.location.pathname + window.location.search + window.location.hash) {
+      window.history.replaceState(null, "", url);
+    }
+  }
+
+  function matches(item, q, region, club, swimmer, meet) {
+    if (region && !same(item.region, region)) return false;
+    if (meet && !same(item.meet, meet)) return false;
+    if (club && !has(item.clubs, club)) return false;
+    if (swimmer && !has(item.swimmers, swimmer)) return false;
+    if (q && haystack(item).indexOf(q) === -1) return false;
+    return true;
+  }
+
+  function haystack(item) {
+    return [item.title, item.summary, item.meet, item.location, item.region]
+      .concat(item.clubs || [])
+      .concat(item.swimmers || [])
+      .join(" ")
+      .toLowerCase();
+  }
+
+  function has(list, value) {
+    if (!list) return false;
+    for (var i = 0; i < list.length; i++) if (same(list[i], value)) return true;
+    return false;
+  }
+
+  function same(a, b) {
+    return String(a || "").toLowerCase() === String(b || "").toLowerCase();
+  }
+
+  function unique(items, key) {
+    var seen = {};
+    var values = [];
+    for (var i = 0; i < items.length; i++) {
+      var value = items[i][key];
+      if (!value || seen[value]) continue;
+      seen[value] = true;
+      values.push(value);
+    }
+    values.sort(function (a, b) { return a.localeCompare(b); });
+    return values;
+  }
+
+  function uniqueList(items, key) {
+    var seen = {};
+    var values = [];
+    for (var i = 0; i < items.length; i++) {
+      var list = items[i][key] || [];
+      for (var j = 0; j < list.length; j++) {
+        if (!list[j] || seen[list[j]]) continue;
+        seen[list[j]] = true;
+        values.push(list[j]);
+      }
+    }
+    values.sort(function (a, b) { return a.localeCompare(b); });
+    return values;
+  }
+
+  function fillSelect(select, values) {
+    for (var i = 0; i < values.length; i++) {
+      var option = document.createElement("option");
+      option.value = values[i];
+      option.textContent = values[i];
+      select.appendChild(option);
+    }
+  }
+
+  function setSelect(select, value) {
+    if (!value) return;
+    var found = false;
+    for (var i = 0; i < select.options.length; i++) {
+      if (same(select.options[i].value, value)) {
+        select.value = select.options[i].value;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      var option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+      select.value = value;
+    }
+  }
+})();

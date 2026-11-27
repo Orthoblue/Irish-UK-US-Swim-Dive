@@ -1,1 +1,34 @@
-{%- assign articles = site.pages | where_exp: "item", "item.path contains 'articles/'" | sort: "path" | reverse -%}
+{%- comment -%}
+  Articles in competition-date order, newest first. The date is the
+  front-matter meet date. The same day is ordered by title.
+{%- endcomment -%}
+{%- assign pool = "" | split: "," | shift -%}
+{%- for item in site.pages -%}
+  {%- assign top = item.path | split: "/" | first -%}
+  {%- assign ext = item.name | split: "." | last -%}
+  {%- if top == "articles" and ext == "md" and item.name != "index.md" -%}
+    {%- assign pool = pool | push: item -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign keys = "" | split: "," | shift -%}
+{%- for article in pool -%}
+  {%- if article.date -%}
+    {%- assign ymd = article.date | date: "%Y%m%d" -%}
+  {%- else -%}
+    {%- assign ymd = article.name | slice: 0, 10 | remove: "-" -%}
+  {%- endif -%}
+  {%- assign inv = 99999999 | minus: ymd -%}
+  {%- if article.title and article.title != "" -%}
+    {%- assign title_key = article.title | downcase | strip | replace: "~", " " -%}
+  {%- else -%}
+    {%- assign title_key = article.name | downcase | replace: "~", " " -%}
+  {%- endif -%}
+  {%- assign key = inv | append: "~" | append: title_key | append: "~" | append: forloop.index0 -%}
+  {%- assign keys = keys | push: key -%}
+{%- endfor -%}
+{%- assign keys = keys | sort -%}
+{%- assign articles = "" | split: "," | shift -%}
+{%- for key in keys -%}
+  {%- assign idx = key | split: "~" | last | plus: 0 -%}
+  {%- assign articles = articles | push: pool[idx] -%}
+{%- endfor -%}

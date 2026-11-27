@@ -7,10 +7,33 @@ description: Every meet recap on Irish-UK-US Swim Dive, newest first.
 <header class="page-head">
   <p class="eyebrow">Archive</p>
   <h1>Articles</h1>
-  <p class="lede">Every meet recap on the site, newest first.</p>
+  <p class="lede">Every meet recap on the site, newest meet first.</p>
 </header>
 
 {% include select-articles.html %}
+<form class="filters" id="article-filters" action="{{ '/articles/' | relative_url }}" method="get" role="search">
+  <label class="filter-field filter-search">Search
+    <input id="filter-q" type="search" name="q" placeholder="Swimmer, club, meet, or title" autocomplete="off">
+  </label>
+  <label class="filter-field">Region
+    <select id="filter-region" name="region"><option value="">All regions</option></select>
+  </label>
+  <label class="filter-field">Club
+    <select id="filter-club" name="club"><option value="">All clubs</option></select>
+  </label>
+  <label class="filter-field">Swimmer
+    <select id="filter-swimmer" name="swimmer"><option value="">All swimmers</option></select>
+  </label>
+  <label class="filter-field">Meet
+    <select id="filter-meet" name="meet"><option value="">All meets</option></select>
+  </label>
+</form>
+<div class="filter-bar">
+  <p class="filter-status" id="filter-status" aria-live="polite"></p>
+  <button type="button" class="filter-clear" id="filter-clear" hidden>Clear filters</button>
+</div>
+<script type="application/json" id="article-index">{% include articles-json.html %}</script>
+<div id="article-list">
 {% assign shown = 0 %}
 {% assign current_year = "" %}
 {% assign opened = false %}
@@ -40,6 +63,8 @@ description: Every meet recap on Irish-UK-US Swim Dive, newest first.
   {% endif %}
 {% endfor %}
 {% if opened %}</div></section>{% endif %}
+</div>
+<p class="empty" id="filter-empty" hidden>No recaps match these filters.</p>
 {% if shown == 0 %}
 <p class="empty">No meet recaps yet.</p>
 {% endif %}
