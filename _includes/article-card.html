@@ -1,0 +1,10 @@
+{%- assign article = include.article -%}
+<article class="story{% if include.lead %} story-lead{% else %} story-row{% endif %}">
+  <p class="kicker">{% if article.meet and article.meet != "" %}{{ article.meet | escape }}{% else %}Meet recap{% endif %}</p>
+  <h3 class="story-title"><a href="{{ article.url | relative_url }}">{% include article-title.html item=article %}</a></h3>
+  {% include article-meta.html item=article %}
+  {%- if article.summary and article.summary != "" -%}
+  <p class="story-summary">{{ article.summary | escape }}</p>
+  {%- endif -%}
+  <p class="story-more"><a href="{{ article.url | relative_url }}">Read recap<span class="sr-only">: {% include article-title.html item=article %}</span></a></p>
+</article>

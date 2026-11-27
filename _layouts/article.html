@@ -1,0 +1,46 @@
+---
+layout: default
+---
+<article class="recap">
+  <header class="recap-head">
+    <p class="kicker">{% if page.meet and page.meet != "" %}{{ page.meet | escape }}{% else %}Meet recap{% endif %}</p>
+    {%- if page.title and page.title != "" -%}
+    <h1>{{ page.title | escape }}</h1>
+    {%- endif -%}
+    {% include article-meta.html item=page %}
+    {%- if page.summary and page.summary != "" -%}
+    <p class="deck">{{ page.summary | escape }}</p>
+    {%- endif -%}
+  </header>
+  <nav class="toc" id="toc" hidden>
+    <p class="toc-label">In this recap</p>
+    <ol id="toc-list"></ol>
+  </nav>
+  <div class="article-body">
+    {% include article-body.html %}
+  </div>
+</article>
+{%- if page.title and page.title != "" -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": {{ page.title | jsonify }},
+  "mainEntityOfPage": {{ page.url | absolute_url | jsonify }}
+  {%- if page.date -%},
+  "datePublished": "{{ page.date | date: '%Y-%m-%d' }}"
+  {%- endif -%}
+  {%- if page.summary and page.summary != "" -%},
+  "description": {{ page.summary | jsonify }}
+  {%- endif -%},
+  "author": {
+    "@type": "Organization",
+    "name": {{ site.title | jsonify }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ site.title | jsonify }}
+  }
+}
+</script>
+{%- endif -%}

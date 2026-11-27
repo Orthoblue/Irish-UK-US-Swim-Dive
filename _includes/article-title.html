@@ -1,0 +1,14 @@
+{%- assign item = include.item -%}
+{%- if item.title and item.title != "" -%}
+{{ item.title | escape }}
+{%- else -%}
+{%- assign stem = item.name | split: "." | first -%}
+{%- assign bits = stem | split: "-" -%}
+{%- if bits[0].size == 4 and bits[1].size == 2 and bits[2].size == 2 -%}
+{%- assign rest = bits | slice: 3, 24 -%}
+{%- assign fallback = rest | join: " " -%}
+{%- else -%}
+{%- assign fallback = stem | replace: "-", " " -%}
+{%- endif -%}
+{%- if fallback == "" -%}{{ stem | escape }}{%- else -%}{{ fallback | escape }}{%- endif -%}
+{%- endif -%}

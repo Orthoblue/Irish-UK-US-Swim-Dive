@@ -1,0 +1,13 @@
+{%- assign item = include.item -%}
+{%- if item.date -%}
+<time datetime="{{ item.date | date: '%Y-%m-%d' }}">{{ item.date | date: "%-d %B %Y" }}</time>
+{%- else -%}
+{%- assign stem = item.name | split: "." | first -%}
+{%- assign bits = stem | split: "-" -%}
+{%- assign y = bits[0] -%}
+{%- assign m = bits[1] -%}
+{%- assign d = bits[2] -%}
+{%- if y.size == 4 and m.size == 2 and d.size == 2 -%}
+<time datetime="{{ y }}-{{ m }}-{{ d }}">{{ y }}-{{ m }}-{{ d }}</time>
+{%- endif -%}
+{%- endif -%}

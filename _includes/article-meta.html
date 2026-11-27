@@ -1,0 +1,14 @@
+{%- assign item = include.item -%}
+{%- capture date_html -%}{% include article-date.html item=item %}{%- endcapture -%}
+{%- assign date_html = date_html | strip -%}
+{%- if date_html != "" or item.location and item.location != "" -%}
+<p class="story-meta">
+  {%- if date_html != "" -%}{{ date_html }}{%- endif -%}
+  {%- if date_html != "" and item.location and item.location != "" -%}
+  <span class="meta-dot" aria-hidden="true">·</span>
+  {%- endif -%}
+  {%- if item.location and item.location != "" -%}
+  <span class="meta-location">{{ item.location | escape }}</span>
+  {%- endif -%}
+</p>
+{%- endif -%}
