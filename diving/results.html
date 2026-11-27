@@ -1,0 +1,22 @@
+---
+layout: default
+title: Diving Results
+permalink: /diving/results/
+body_class: results
+description: Diving results from official published sources, compiled by Tom and refreshed weekly on Fridays.
+---
+<div class="results-shell">
+  <div class="results-bar">
+    <div class="results-intro">
+      <h1>Diving Results</h1>
+      <p>Diving results from official published sources, compiled by Tom and refreshed weekly on Fridays.</p>
+    </div>
+    <p class="results-fallback"><a href="{{ '/diving/dashboard/' | relative_url }}" target="_blank" rel="noopener noreferrer">Open in a new tab</a></p>
+  </div>
+  <iframe
+    class="results-frame"
+    src="{{ '/diving/dashboard/' | relative_url }}"
+    title="Diving results dashboard"
+    loading="eager"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>

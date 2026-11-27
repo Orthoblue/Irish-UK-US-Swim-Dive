@@ -77,7 +77,7 @@ Writers adding a new recap should put `region`, `clubs`, and `swimmers` in the a
 | Articles | `/articles/` |
 | Results | `/results/` |
 | Diving Weekly | `/diving/` |
-| Diving Results | `/diving/dashboard/` |
+| Diving Results | `/diving/results/` |
 | Links | `/links/` |
 | About | `/about/` |
 
@@ -106,6 +106,8 @@ The weekly story.
 `region` is shown as written. Current values are `US`, `UK`, and `Ireland`. `International` can be added later. There is no `meet` field. The page is ordered by `date`, newest first, then by title. A new file in `diving/articles/` is picked up on the next build with no other change.
 
 The diving results dashboard is the five files in `diving/dashboard/` (`index.html`, `dv0.js`, `dv1.js`, `meets.js`, `summary.json`). They are copied as static files and served at `/diving/dashboard/`. A weekly sync can overwrite those five files in place. Do not rename them or add front matter; Jekyll would then stop copying them unchanged.
+
+The public Diving Results page is `diving/results.html`, at `/diving/results/`. It uses the site header and embeds `/diving/dashboard/`.
 
 ## GitHub Pages
 
