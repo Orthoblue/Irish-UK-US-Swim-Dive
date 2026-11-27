@@ -34,6 +34,21 @@ body_class: home
   {% endif %}
 </section>
 
+{% include select-diving.html %}
+{% if diving_articles.size > 0 %}
+<section class="latest" aria-labelledby="diving-heading">
+  <div class="section-label">
+    <h2 id="diving-heading">Latest from Diving Weekly</h2>
+    <a class="section-link" href="{{ '/diving/' | relative_url }}">All diving</a>
+  </div>
+  <div class="story-list">
+    {% for article in diving_articles limit:3 %}
+      {% include article-card.html article=article %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <aside class="promo">
   <div>
     <p class="kicker">Results</p>

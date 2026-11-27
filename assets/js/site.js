@@ -86,41 +86,41 @@
   var empty = document.getElementById("filter-empty");
   var cards = document.querySelectorAll("#article-list .story");
 
-  fillSelect(regionSelect, unique(index, "region"));
-  fillSelect(clubSelect, uniqueList(index, "clubs"));
-  fillSelect(swimmerSelect, uniqueList(index, "swimmers"));
-  fillSelect(meetSelect, unique(index, "meet"));
+  if (regionSelect) fillSelect(regionSelect, unique(index, "region"));
+  if (clubSelect) fillSelect(clubSelect, uniqueList(index, "clubs"));
+  if (swimmerSelect) fillSelect(swimmerSelect, uniqueList(index, "swimmers"));
+  if (meetSelect) fillSelect(meetSelect, unique(index, "meet"));
 
   var params = new URLSearchParams(window.location.search);
-  qInput.value = params.get("q") || "";
+  if (qInput) qInput.value = params.get("q") || "";
   setSelect(regionSelect, params.get("region") || "");
   setSelect(clubSelect, params.get("club") || "");
   setSelect(swimmerSelect, params.get("swimmer") || "");
   setSelect(meetSelect, params.get("meet") || "");
 
   form.addEventListener("submit", function (event) { event.preventDefault(); apply(); });
-  qInput.addEventListener("input", apply);
-  regionSelect.addEventListener("change", apply);
-  clubSelect.addEventListener("change", apply);
-  swimmerSelect.addEventListener("change", apply);
-  meetSelect.addEventListener("change", apply);
-  clearButton.addEventListener("click", function () {
-    qInput.value = "";
-    regionSelect.value = "";
-    clubSelect.value = "";
-    swimmerSelect.value = "";
-    meetSelect.value = "";
+  if (qInput) qInput.addEventListener("input", apply);
+  if (regionSelect) regionSelect.addEventListener("change", apply);
+  if (clubSelect) clubSelect.addEventListener("change", apply);
+  if (swimmerSelect) swimmerSelect.addEventListener("change", apply);
+  if (meetSelect) meetSelect.addEventListener("change", apply);
+  if (clearButton) clearButton.addEventListener("click", function () {
+    if (qInput) qInput.value = "";
+    if (regionSelect) regionSelect.value = "";
+    if (clubSelect) clubSelect.value = "";
+    if (swimmerSelect) swimmerSelect.value = "";
+    if (meetSelect) meetSelect.value = "";
     apply();
   });
 
   apply();
 
   function apply() {
-    var q = qInput.value.trim().toLowerCase();
-    var region = regionSelect.value;
-    var club = clubSelect.value;
-    var swimmer = swimmerSelect.value;
-    var meet = meetSelect.value;
+    var q = qInput ? qInput.value.trim().toLowerCase() : "";
+    var region = regionSelect ? regionSelect.value : "";
+    var club = clubSelect ? clubSelect.value : "";
+    var swimmer = swimmerSelect ? swimmerSelect.value : "";
+    var meet = meetSelect ? meetSelect.value : "";
     var shown = 0;
 
     for (var i = 0; i < cards.length; i++) {
@@ -138,14 +138,16 @@
 
     var filtering = q || region || club || swimmer || meet;
     if (status) {
-      var noun = shown === 1 ? "recap" : "recaps";
+      var listEl = document.getElementById("article-list");
+      var nounBase = (listEl && listEl.getAttribute("data-noun")) || "recap";
+      var noun = nounBase === "story" ? (shown === 1 ? "story" : "stories") : (shown === 1 ? "recap" : "recaps");
       status.textContent = filtering ? shown + " " + noun + (shown === 1 ? " matches" : " match") : shown + " " + noun;
     }
     if (empty) empty.hidden = shown !== 0;
     if (clearButton) clearButton.hidden = !filtering;
 
     var next = new URLSearchParams();
-    if (q) next.set("q", qInput.value.trim());
+    if (q && qInput) next.set("q", qInput.value.trim());
     if (region) next.set("region", region);
     if (club) next.set("club", club);
     if (swimmer) next.set("swimmer", swimmer);
@@ -222,7 +224,7 @@
   }
 
   function setSelect(select, value) {
-    if (!value) return;
+    if (!select || !value) return;
     var found = false;
     for (var i = 0; i < select.options.length; i++) {
       if (same(select.options[i].value, value)) {

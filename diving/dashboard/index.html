@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diving Results</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#222;--muted:#555;--line:#eee;--head:#e8f0fe;--acc:#1a73e8;--hi:#f0f7ff;--au:#0c2340;--au2:#e87722}
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1080px;margin:0 auto;padding:20px}
+.card{background:var(--card);padding:22px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px}
+h1{margin:0 0 6px;font-size:1.6rem}
+h2{font-size:1.15rem;margin:18px 0 6px}
+.sub{color:var(--muted);margin:0 0 14px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px}
+.stat{background:var(--head);border-radius:8px;padding:10px 14px;min-width:110px}
+.stat b{display:block;font-size:1.2rem;color:var(--acc)}
+.stat span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.tabs button,.chips button{border:1px solid #d0d7de;background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
+.tabs button.on,.chips button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.chips button{padding:5px 11px;font-size:13px;border-radius:999px}
+input,select{width:100%;max-width:520px;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:6px;margin:0 8px 8px 0}
+select{max-width:220px}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--head);position:sticky;top:0}
+.row{cursor:pointer}.row:hover{background:var(--hi)}
+.time{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;color:var(--acc);white-space:nowrap}
+.muted{color:var(--muted);font-size:13px}
+.pill{display:inline-block;background:var(--head);border-radius:999px;padding:1px 8px;font-size:11px;margin-left:6px;color:#334}
+.pill.US{background:#e6f4ea}.pill.UK{background:#fde8e8}.pill.Ireland{background:#e3f6e8;color:#0b6b2e}.pill.International{background:#fff4d6}
+.meet{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.meet h3{margin:0;font-size:1rem}
+.empty{background:#fffbe6;border:1px solid #f2e2a0;border-radius:8px;padding:12px;color:#5a4a00}
+.au{border-left:6px solid var(--au2);background:#fbf7f2}
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:0}
+a{color:var(--acc)}
+footer{text-align:center;color:#999;font-size:12px;padding:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<h1>Diving Results</h1>
+<p class="sub">Springboard, platform and synchro results from the US, UK and Ireland (university, regional, national and international meets). Every row links to its official source. Built Fri Nov 27, 2026 11:14 AM CT.</p>
+<div class="stats" id="stats"></div>
+<div class="tabs">
+<button class="on" id="tab-latest" onclick="tab('latest')">Latest Meets</button>
+<button id="tab-lead" onclick="tab('lead')">Leaderboards</button>
+<button id="tab-search" onclick="tab('search')">Diver Search</button>
+<button id="tab-auburn" onclick="tab('auburn')">Auburn Diving</button>
+<button id="tab-src" onclick="tab('src')">Sources</button>
+</div>
+<div class="chips" id="regionchips"></div>
+<div class="chips" id="levelchips"></div>
+
+<div id="panel-latest"><div id="latest-out"></div></div>
+
+<div id="panel-lead" hidden>
+<div class="filters">
+<select id="le" onchange="lead()"></select>
+<select id="lg" onchange="lead()"><option value="W">Women</option><option value="M">Men</option><option value="X">Mixed</option></select>
+<select id="lr" onchange="lead()"><option value="F">Finals only</option><option value="">All rounds</option></select>
+</div>
+<p class="muted">Best score per diver for the selected filters. Scores depend on the number of dives and the age group, so compare like with like (NCAA dual meets usually use 6 dives; championship finals and senior events use 5–6; age-group and novice events use fewer).</p>
+<div id="lead-out"></div>
+</div>
+
+<div id="panel-search" hidden>
+<input id="q" placeholder="Type a diver or school/club (Hubred, Auburn, Dive London…)" oninput="search()">
+<div id="search-out"></div>
+</div>
+
+<div id="panel-auburn" hidden><div id="auburn-out"></div></div>
+
+<div id="panel-src" hidden><div id="src-out"></div></div>
+</div>
+<footer>Diving dashboard by Tom · modelled on Roberto's swimming dashboard · data: official Hy-Tek Meet Manager PDFs, diveapp.co.uk, World Aquatics API</footer>
+</div>
+<script>var D=[];</script>
+<script src="meets.js"></script>
+<script src="dv0.js"></script>
+<script src="dv1.js"></script>
+<script>
+var REG="",LEV="",TAB="latest";
+var MID={};M.forEach(function(m){MID[m.id]=m;});
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function fmt(x){return x==null?"":Number(x).toFixed(2);}
+function gname(g){return g==="W"?"Women":g==="M"?"Men":"Mixed";}
+function dfmt(d){if(!d)return"";var p=d.split("-");var mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+p[1]-1];return mo+" "+(+p[2])+", "+p[0];}
+function inScope(r){var m=MID[r.m];return(!REG||m.rg===REG)&&(!LEV||m.l===LEV);}
+function isFinal(r){return /Final/.test(r.r);}
+function chips(){
+  var regs=["","US","UK","Ireland","International"],levs=["","international","national","regional","university"];
+  document.getElementById("regionchips").innerHTML="<span class='muted' style='align-self:center'>Region:</span> "+regs.map(function(x){return "<button class='"+(x===REG?"on":"")+"' onclick=\"REG='"+x+"';redraw()\">"+(x||"All")+"</button>";}).join("");
+  document.getElementById("levelchips").innerHTML="<span class='muted' style='align-self:center'>Level:</span> "+levs.map(function(x){return "<button class='"+(x===LEV?"on":"")+"' onclick=\"LEV='"+x+"';redraw()\">"+(x?x[0].toUpperCase()+x.slice(1):"All")+"</button>";}).join("");
+}
+function stats(){
+  var rs=D.filter(inScope),ms={},dv={};rs.forEach(function(r){ms[r.m]=1;dv[r.n+"|"+r.c]=1;});
+  var latest=Object.keys(ms).map(function(k){return MID[k].d;}).sort().pop()||"";
+  document.getElementById("stats").innerHTML=[[Object.keys(ms).length,"meets"],[Object.keys(dv).length,"divers"],[rs.length,"results"],[dfmt(latest)||"—","latest meet"]].map(function(s){return "<div class='stat'><b>"+s[0]+"</b><span>"+s[1]+"</span></div>";}).join("");
+}
+function emptyMsg(){
+  if(REG==="Ireland"){var ab=D.filter(function(r){return r.na==="IRL";}).sort(function(a,b){return (MID[b.m].d||"").localeCompare(MID[a.m].d||"");});
+    return "<div class='empty'>No Irish domestic diving meets with published results in this window (Swim Ireland's pages block automated reads; nothing found on diveapp or World Aquatics). Swim Ireland named diver Emma Kelly (Limerick SC) its 2026 Female Performance Pathway Athlete of the Year on Nov. 14.</div>"+(ab.length?"<h2>Irish divers abroad</h2>"+rowsTable(ab):"");}
+  return "<div class='empty'>No results for this region and level yet.</div>";
+}
+function latest(){
+  var by={};D.forEach(function(r){if(inScope(r))(by[r.m]=by[r.m]||[]).push(r);});
+  var ids=Object.keys(by).sort(function(a,b){return (MID[b].d+MID[b].n).localeCompare(MID[a].d+MID[a].n);});
+  if(!ids.length){document.getElementById("latest-out").innerHTML=emptyMsg();return;}
+  var h="";ids.slice(0,60).forEach(function(id){
+    var m=MID[id],rs=by[id];var wins={};
+    rs.forEach(function(r){if(r.p===1&&isFinal(r)&&!r.st){var k=r.t;(wins[k]=wins[k]||[]).push(r);}});
+    var wl=Object.keys(wins).sort().slice(0,14).map(function(k){var w=wins[k];return "<tr><td>"+esc(k)+"</td><td>"+w.map(function(r){return esc(r.n);}).join(" / ")+"</td><td>"+esc(w[0].c)+"</td><td class='time'>"+fmt(w[0].sc)+"</td></tr>";}).join("");
+    h+="<div class='meet'><h3>"+esc(m.n)+"<span class='pill "+m.rg+"'>"+m.rg+"</span><span class='pill'>"+m.l+"</span></h3><div class='muted'>"+dfmt(m.s)+(m.d&&m.d!==m.s?" – "+dfmt(m.d):"")+(m.v?" · "+esc(m.v):"")+" · "+rs.length+" results · <a href='"+esc(m.u)+"' target='_blank' rel='noopener'>official results</a></div>"+(wl?"<table><tr><th>Event</th><th>Winner</th><th>School / club</th><th>Score</th></tr>"+wl+"</table>":"<p class='muted'>No finals winners parsed.</p>")+"</div>";
+  });
+  if(ids.length>60)h+="<p class='muted'>Showing the 60 most recent of "+ids.length+" meets. Narrow by region or level.</p>";
+  document.getElementById("latest-out").innerHTML=h;
+}
+function leadInit(){
+  var ev={};D.forEach(function(r){ev[r.e]=(ev[r.e]||0)+1;});
+  var order=["1m","3m","Platform","Synchro 3m","Synchro 10m","Synchro"];
+  var ks=Object.keys(ev).sort(function(a,b){var ia=order.indexOf(a),ib=order.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib)||a.localeCompare(b);});
+  document.getElementById("le").innerHTML=ks.map(function(k){return "<option>"+esc(k)+"</option>";}).join("");
+}
+function lead(){
+  var e=document.getElementById("le").value,g=document.getElementById("lg").value,fo=document.getElementById("lr").value;
+  var best={};D.forEach(function(r){if(!inScope(r)||r.e!==e||r.g!==g||r.sc==null||r.st||r.x)return;if(fo&&!isFinal(r))return;var k=r.n+"|"+r.c;if(!best[k]||r.sc>best[k].sc)best[k]=r;});
+  var rs=Object.values(best).sort(function(a,b){return b.sc-a.sc;}).slice(0,50);
+  if(!rs.length){document.getElementById("lead-out").innerHTML=emptyMsg();return;}
+  document.getElementById("lead-out").innerHTML="<table><tr><th>#</th><th>Diver</th><th>School / club</th><th>Score</th><th>Meet</th><th>Event / round</th></tr>"+rs.map(function(r,i){var m=MID[r.m];return "<tr><td>"+(i+1)+"</td><td>"+esc(r.n)+"</td><td>"+esc(r.c)+"</td><td class='time'>"+fmt(r.sc)+"</td><td>"+esc(m.n)+"<span class='pill "+m.rg+"'>"+m.rg+"</span><div class='muted'>"+dfmt(m.d)+"</div></td><td class='muted'>"+esc(r.t)+" · "+esc(r.r)+(r.dv?" · "+r.dv+" rds":"")+" · <a href='"+esc(r.u||m.u)+"' target='_blank' rel='noopener'>source</a></td></tr>";}).join("")+"</table>";
+}
+function rowsTable(rs){
+  return "<table><tr><th>Date</th><th>Meet</th><th>Event</th><th>Round</th><th>Pl</th><th>Score</th><th>Diver</th><th>School / club</th></tr>"+rs.map(function(r){var m=MID[r.m];return "<tr><td class='muted'>"+dfmt(m.d)+"</td><td>"+esc(m.n)+" <a class='muted' href='"+esc(r.u||m.u)+"' target='_blank' rel='noopener'>src</a></td><td>"+esc(r.t)+"</td><td>"+esc(r.r)+"</td><td>"+(r.p||r.st||"")+"</td><td class='time'>"+fmt(r.sc)+(r.ps?" <span class='muted'>(prelim "+fmt(r.ps)+")</span>":"")+"</td><td>"+esc(r.n)+"</td><td>"+esc(r.c)+"</td></tr>";}).join("")+"</table>";
+}
+function search(){
+  var q=document.getElementById("q").value.trim().toLowerCase();
+  if(q.length<2){document.getElementById("search-out").innerHTML="<p class='muted'>Type at least two letters.</p>";return;}
+  var rs=D.filter(function(r){return inScope(r)&&((r.n+" "+r.c).toLowerCase().indexOf(q)>=0);});
+  rs.sort(function(a,b){return (MID[b.m].d||"").localeCompare(MID[a.m].d||"")||b.sc-a.sc;});
+  document.getElementById("search-out").innerHTML="<p class='muted'>"+rs.length+" results"+(rs.length>300?" (first 300 shown)":"")+"</p>"+rowsTable(rs.slice(0,300));
+}
+function auburn(){
+  var rs=D.filter(function(r){return /auburn/i.test(r.c);});
+  var best={};rs.forEach(function(r){if(r.sc==null||r.st)return;var k=r.n+"|"+r.e;if(!best[k]||r.sc>best[k].sc)best[k]=r;});
+  var divers={};rs.forEach(function(r){divers[r.n]=1;});
+  var podium=rs.filter(function(r){return isFinal(r)&&r.p&&r.p<=3;});
+  var h="<div class='meet au'><h3>Auburn Tigers diving</h3><p class='muted'>Matthew Hamilton's Auburn teammates on the boards. "+Object.keys(divers).length+" Auburn divers, "+rs.length+" results in this dataset. Next: USA Diving Winter Nationals, Dec. 11–15, Midland, Texas (qualifier Dec. 9–10).</p>";
+  h+="<p><b>Podiums:</b> "+(podium.map(function(r){return esc(r.n)+" — "+esc(gname(r.g))+" "+esc(r.e)+" "+r.p+(r.p===1?"st":r.p===2?"nd":"rd")+" ("+fmt(r.sc)+", "+esc(MID[r.m].n)+")";}).join("; ")||"none yet")+"</p>";
+  h+="<p class='muted'>Meet recap: <a href='https://orthoblue.github.io/Irish-UK-US-Swim-Dive/articles/2026-11-20-tennessee-diving-invitational/' target='_blank' rel='noopener'>Hubred, Landi and Hallifax podium at the Tennessee Invitational</a> (Aubie).</p></div>";
+  var bl=Object.values(best).sort(function(a,b){return a.e.localeCompare(b.e)||b.sc-a.sc;});
+  h+="<h2>Season bests by diver and event</h2><table><tr><th>Diver</th><th>Event</th><th>Best</th><th>Meet</th></tr>"+bl.map(function(r){return "<tr><td>"+esc(r.n)+"</td><td>"+esc(gname(r.g))+" "+esc(r.e)+"</td><td class='time'>"+fmt(r.sc)+"</td><td>"+esc(MID[r.m].n)+" <span class='muted'>("+esc(r.r)+")</span></td></tr>";}).join("")+"</table>";
+  rs.sort(function(a,b){return (MID[b.m].d||"").localeCompare(MID[a.m].d||"")||a.e.localeCompare(b.e);});
+  h+="<h2>All Auburn diving results</h2>"+rowsTable(rs);
+  document.getElementById("auburn-out").innerHTML=h;
+}
+function src(){
+  var by={};M.forEach(function(m){(by[m.rg+"|"+m.l]=by[m.rg+"|"+m.l]||[]).push(m);});
+  var h="<p class='muted'>Meets in this build, grouped by region and level. Each row's source is linked in the tables above.</p><table><tr><th>Region</th><th>Level</th><th>Meets</th><th>Platform</th></tr>";
+  Object.keys(by).sort().forEach(function(k){var p=k.split("|"),src={};by[k].forEach(function(m){src[m.src]=1;});h+="<tr><td>"+p[0]+"</td><td>"+p[1]+"</td><td>"+by[k].length+"</td><td class='muted'>"+esc(Object.keys(src).join(", "))+"</td></tr>";});
+  h+="</table><p class='muted'>Ireland: no verified results yet (Swim Ireland site blocks automated reads). Full source notes: /workspace/diving/SOURCES.md.</p>";
+  document.getElementById("src-out").innerHTML=h;
+}
+function tab(t){TAB=t;["latest","lead","search","auburn","src"].forEach(function(x){document.getElementById("panel-"+x).hidden=(x!==t);document.getElementById("tab-"+x).className=(x===t?"on":"");});var sc=(t==="auburn"||t==="src");document.getElementById("regionchips").style.display=sc?"none":"";document.getElementById("levelchips").style.display=sc?"none":"";redraw();}
+function redraw(){chips();stats();if(TAB==="latest")latest();else if(TAB==="lead")lead();else if(TAB==="search")search();else if(TAB==="auburn")auburn();else src();}
+leadInit();if(location.hash&&document.getElementById('panel-'+location.hash.slice(1)))tab(location.hash.slice(1));else redraw();
+</script>
+</body>
+</html>

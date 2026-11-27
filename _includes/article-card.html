@@ -1,7 +1,7 @@
 {%- assign article = include.article -%}
 {%- include article-fields.html item=article -%}
 <article class="story{% if include.lead %} story-lead{% else %} story-row{% endif %}" data-slug="{{ field_slug | escape }}">
-  <p class="kicker">{% if article.meet and article.meet != "" %}{{ article.meet | escape }}{% else %}Meet recap{% endif %}</p>
+  <p class="kicker">{% if article.meet and article.meet != "" %}{{ article.meet | escape }}{% elsif article.kicker and article.kicker != "" %}{{ article.kicker | escape }}{% else %}Meet recap{% endif %}</p>
   <h3 class="story-title"><a href="{{ article.url | relative_url }}">{% include article-title.html item=article %}</a></h3>
   {% include article-meta.html item=article %}
   {% include article-tags.html %}

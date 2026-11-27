@@ -80,6 +80,30 @@ Writers adding a new recap should put `region`, `clubs`, and `swimmers` in the a
 
 The Results page embeds [https://orthoblue.github.io/swim-results/](https://orthoblue.github.io/swim-results/) and does not copy its data.
 
+## Diving
+
+Diving Weekly is a separate section. Its stories are not listed with the swimming articles.
+
+**Path:** `diving/articles/YYYY-MM-DD-slug.md`
+
+```markdown
+---
+title: "Headline"
+date: 2026-11-27
+location: "United Kingdom"
+region: "UK"
+summary: "One or two sentences."
+---
+
+# Headline
+
+The weekly story.
+```
+
+`region` is shown as written. Current values are `US`, `UK`, and `Ireland`. `International` can be added later. There is no `meet` field. The page is ordered by `date`, newest first, then by title. A new file in `diving/articles/` is picked up on the next build with no other change.
+
+The diving results dashboard is the five files in `diving/dashboard/` (`index.html`, `dv0.js`, `dv1.js`, `meets.js`, `summary.json`). They are copied as static files and served at `/diving/dashboard/`. A weekly sync can overwrite those five files in place. Do not rename them or add front matter; Jekyll would then stop copying them unchanged.
+
 ## GitHub Pages
 
 Deploys are built by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every push to `main`.
