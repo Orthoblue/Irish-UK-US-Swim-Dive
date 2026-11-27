@@ -116,6 +116,7 @@
   apply();
 
   function apply() {
+    cascade();
     var q = qInput ? qInput.value.trim().toLowerCase() : "";
     var region = regionSelect ? regionSelect.value : "";
     var club = clubSelect ? clubSelect.value : "";
@@ -156,6 +157,102 @@
     var url = window.location.pathname + (query ? "?" + query : "") + window.location.hash;
     if (url !== window.location.pathname + window.location.search + window.location.hash) {
       window.history.replaceState(null, "", url);
+    }
+  }
+
+  function cascade() {
+    var guard = 0;
+    while (guard++ < 8) {
+      var clubVals = optionValues(pool("club"), "clubs");
+      var swimmerVals = optionValues(pool("swimmer"), "swimmers");
+      var meetVals = optionValues(pool("meet"), "meet");
+      var cleared = false;
+      if (clubSelect && selected(clubSelect) && !valueIn(clubVals, selected(clubSelect))) {
+        clubSelect.value = "";
+        cleared = true;
+      }
+      if (swimmerSelect && selected(swimmerSelect) && !valueIn(swimmerVals, selected(swimmerSelect))) {
+        swimmerSelect.value = "";
+        cleared = true;
+      }
+      if (meetSelect && selected(meetSelect) && !valueIn(meetVals, selected(meetSelect))) {
+        meetSelect.value = "";
+        cleared = true;
+      }
+      if (cleared) continue;
+      var regionVals = optionValues(regionPool(), "region");
+      if (regionSelect && selected(regionSelect) && !valueIn(regionVals, selected(regionSelect))) {
+        regionSelect.value = "";
+        continue;
+      }
+      refill(regionSelect, regionVals);
+      refill(clubSelect, clubVals);
+      refill(swimmerSelect, swimmerVals);
+      refill(meetSelect, meetVals);
+      return;
+    }
+  }
+
+  function selected(select) {
+    return select ? select.value : "";
+  }
+
+  function regionPool() {
+    var q = qInput ? qInput.value.trim().toLowerCase() : "";
+    var out = [];
+    for (var i = 0; i < index.length; i++) {
+      if (matches(index[i], q, "", "", "", "")) out.push(index[i]);
+    }
+    return out;
+  }
+
+  function pool(except) {
+    var q = except === "q" ? "" : (qInput ? qInput.value.trim().toLowerCase() : "");
+    var region = except === "region" ? "" : selected(regionSelect);
+    var club = except === "club" ? "" : selected(clubSelect);
+    var swimmer = except === "swimmer" ? "" : selected(swimmerSelect);
+    var meet = except === "meet" ? "" : selected(meetSelect);
+    var out = [];
+    for (var i = 0; i < index.length; i++) {
+      if (matches(index[i], q, region, club, swimmer, meet)) out.push(index[i]);
+    }
+    return out;
+  }
+
+  function optionValues(items, kind) {
+    if (kind === "clubs" || kind === "swimmers") return uniqueList(items, kind);
+    return unique(items, kind);
+  }
+
+  function valueIn(values, value) {
+    for (var i = 0; i < values.length; i++) if (same(values[i], value)) return true;
+    return false;
+  }
+
+  function refill(select, values) {
+    if (!select) return;
+    var current = select.value;
+    var placeholder = select.options[0];
+    var label = placeholder ? placeholder.textContent : "All";
+    select.innerHTML = "";
+    var all = document.createElement("option");
+    all.value = "";
+    all.textContent = label;
+    select.appendChild(all);
+    for (var i = 0; i < values.length; i++) {
+      var option = document.createElement("option");
+      option.value = values[i];
+      option.textContent = values[i];
+      select.appendChild(option);
+    }
+    select.value = "";
+    if (current) {
+      for (var j = 0; j < select.options.length; j++) {
+        if (same(select.options[j].value, current)) {
+          select.value = select.options[j].value;
+          break;
+        }
+      }
     }
   }
 
