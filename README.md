@@ -76,6 +76,9 @@ Writers adding a new recap should put `region`, `clubs`, and `swimmers` in the a
 | Home | `/` |
 | Articles | `/articles/` |
 | Results | `/results/` |
+| Diving Weekly | `/diving/` |
+| Diving Results | `/diving/dashboard/` |
+| Links | `/links/` |
 | About | `/about/` |
 
 The Results page embeds [https://orthoblue.github.io/swim-results/](https://orthoblue.github.io/swim-results/) and does not copy its data.
