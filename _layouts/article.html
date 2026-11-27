@@ -8,6 +8,8 @@ layout: default
     <h1>{{ page.title | escape }}</h1>
     {%- endif -%}
     {% include article-meta.html item=page %}
+    {% include article-fields.html item=page %}
+    {% include article-tags.html %}
     {%- if page.summary and page.summary != "" -%}
     <p class="deck">{{ page.summary | escape }}</p>
     {%- endif -%}

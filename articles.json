@@ -1,0 +1,6 @@
+---
+layout: null
+permalink: /articles.json
+---
+{% include select-articles.html %}
+{% include articles-json.html %}

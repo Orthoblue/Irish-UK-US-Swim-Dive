@@ -1,0 +1,166 @@
+# Tags merged with article front matter. The key is the filename without .md.
+# Lists here are combined with optional front-matter `clubs:` and `swimmers:`.
+# `region` is used only when the article does not set one.
+# Swimmers are the people the story is about, not every row of a results table.
+
+"2026-09-12-world-para-swimming-european-championships":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Deaten Registe
+
+"2026-10-18-aspiring-champions-series-meet-1":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Dylan Registe
+    - Eoghan McQuillan
+    - James Edgar
+    - James Wilson
+    - Sam Bowman
+    - Oskar Purlys
+    - Amelia Stone
+    - Lilia Bowman
+    - Emilee Edgar
+    - Aoife Mason
+    - Ben McCrum
+    - Ross Gray
+    - Christopher Mason
+    - Alfie Shawe
+    - Amy McAllister
+    - Zara Methven
+
+"2026-10-24-ulster-masters-sc-gala":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Alexis Jacquemin
+    - Jerome Jacquemin
+
+"2026-11-07-war-memorial-gala":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Eoghan McQuillan
+    - Oskar Purlys
+    - Harry Gray
+    - James Wilson
+    - Sam Bowman
+    - Alexandre Kiliokaitis
+    - Jackson Cosgrove
+    - Nicolas Carlin
+    - Adam Colgan
+    - Deaten Registe
+    - Dylan Registe
+    - Alfie Shawe
+    - Ben McCrum
+    - Ross Gray
+    - Ben Gracey
+    - Christopher Mason
+    - Noah McCaw
+    - Neitas Sukauskas
+    - Nelas Sukauskas
+    - Jay Gallagher
+    - Aoife Mason
+    - Amelia Stone
+    - Emilee Edgar
+    - Annabel McKeown
+    - Eimear Tian
+    - Jade Elliott
+    - Helen Cox
+    - Emily Davey
+    - Abbie Brown
+    - Gracie Kelly
+    - Milana Flederiene
+    - Tilly Lawlor
+    - Jamie Gracey
+    - Sam Gray
+    - Eunan McCrudden
+    - Myles McMullan
+
+"2026-11-08-south-west-winter-championships":
+  clubs:
+    - Plymouth College Aquatics
+    - Plymouth Leander
+    - Devonport Royal
+    - Caradon
+    - Tavistock
+    - Mount Kelly
+    - Millfield
+  swimmers:
+    - Lexi Mulcahy
+    - Toby Nakamura-Drew
+    - Tomas Stanimirov
+    - Julius Ennals
+    - Nathan Broadwater
+    - Ethan Kaatrud
+    - Felix Escudero
+    - Isla Baggott
+    - Ava Edwards
+    - Ashby Edmonds
+    - Jessica Goodrum
+    - Aiden Symons-Brown
+    - Reid Jones
+    - Xan Mitchell
+    - Charlotte Coles
+    - Clive Marquis
+    - Zoe Cawsey
+    - Megan Daniel
+    - Ellie-Louise Smethurst
+    - Evie Palmer
+    - Jasmine Hall
+    - Joey Bale
+    - Jayden Carter
+    - Zerina Vrabac
+    - Amelia Wright
+    - Wilfred Leigh
+    - Charlie Phipps
+    - Kaden Frampton
+    - Ernest Darkin
+
+"2026-11-21-wolfpack-elite-invitational":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Zoey Zeller
+    - Zetta Grace Bartee
+    - Lora Komoroczy
+    - Daniel Krichevsky
+    - Bradford Johnson
+    - Mike Rice
+    - Matthew Hamilton
+
+"2026-11-22-bucs-short-course-championships":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Dylan Registe
+    - Adam Colgan
+    - Alfie Shawe
+    - Alan Vaughan
+    - Christopher Mason
+    - Daniel Edgar
+
+"2026-11-22-ulster-sc-championships":
+  clubs:
+    - Lisburn City Swimming Club
+  swimmers:
+    - Emilee Edgar
+    - Aoife Mason
+    - Helen Cox
+    - Deaten Registe
+    - Eoghan McQuillan
+    - Ben McCrum
+    - James Wilson
+    - Ben Gracey
+    - Oskar Purlys
+    - Sam Bowman
+    - Nancy Craig
+    - Lilia Bowman
+    - Ross Gray
+    - Cian Garland
+    - Amelia Stone
+    - Emma Bradley
+    - Erin Fitzpatrick
+    - Isabella Kiliokaitis
