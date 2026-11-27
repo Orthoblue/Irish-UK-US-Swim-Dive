@@ -1,0 +1,21 @@
+---
+layout: default
+title: Results
+body_class: results
+description: Swimming results dashboard embedded from the live results site.
+---
+<div class="results-shell">
+  <div class="results-bar">
+    <div class="results-intro">
+      <h1>Results</h1>
+      <p>The swimming results dashboard, loaded live from its own site.</p>
+    </div>
+    <p class="results-fallback"><a href="https://orthoblue.github.io/swim-results/" target="_blank" rel="noopener noreferrer">Open in a new tab</a></p>
+  </div>
+  <iframe
+    class="results-frame"
+    src="https://orthoblue.github.io/swim-results/"
+    title="Swimming results dashboard"
+    loading="eager"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>

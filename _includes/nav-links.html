@@ -1,0 +1,7 @@
+{%- assign here = page.url | default: "/" -%}
+<ul class="nav-list">
+  <li><a href="{{ '/' | relative_url }}"{% if here == "/" or here == "/index.html" %} aria-current="page"{% endif %}>Home</a></li>
+  <li><a href="{{ '/articles/' | relative_url }}"{% if here contains "/articles" %} aria-current="page"{% endif %}>Articles</a></li>
+  <li><a href="{{ '/results/' | relative_url }}"{% if here contains "/results" %} aria-current="page"{% endif %}>Results</a></li>
+  <li><a href="{{ '/about/' | relative_url }}"{% if here contains "/about" %} aria-current="page"{% endif %}>About</a></li>
+</ul>

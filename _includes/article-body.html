@@ -1,0 +1,18 @@
+{%- comment -%}
+  Article files repeat the title as a leading Markdown h1. When front matter
+  already supplies the title, drop that first heading so it is not shown twice.
+  Any other opening markup is left as written.
+{%- endcomment -%}
+{%- assign body = content | strip -%}
+{%- assign lead = body | truncate: 3, "" -%}
+{%- if page.title and page.title != "" and lead == "<h1" -%}
+  {%- assign parts = body | split: "</h1>" -%}
+  {%- if parts.size > 1 -%}
+    {%- assign rest = parts | slice: 1, parts.size -%}
+    {{- rest | join: "</h1>" -}}
+  {%- else -%}
+    {{- content -}}
+  {%- endif -%}
+{%- else -%}
+  {{- content -}}
+{%- endif -%}
