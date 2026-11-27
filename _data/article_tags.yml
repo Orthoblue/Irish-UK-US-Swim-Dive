@@ -118,6 +118,78 @@
     - Kaden Frampton
     - Ernest Darkin
 
+"2026-10-02-csl-match-3-stanford":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Gabriel Machuco
+    - Warner Russ
+    - Mike Rice
+    - Nicolas Gama
+    - Matthew Hamilton
+    - Sammie Hamilton
+    - Lora Komoroczy
+    - Zoey Zeller
+    - Daniel Krichevsky
+
+"2026-10-17-georgia-tech-dual-meet-tournament":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Zoey Zeller
+    - Zetta Grace Bartee
+    - Lora Komoroczy
+    - Sammie Hamilton
+    - Gabriel Machuco
+    - Warner Russ
+    - Mike Rice
+    - Matthew Hamilton
+    - Alexey Glivinsky
+
+"2026-10-23-csl-match-6-athens":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Zetta Grace Bartee
+    - Gabriel Machuco
+    - Zoey Zeller
+    - Kaua Carvalho
+    - Warner Russ
+    - Mike Rice
+    - Matthew Hamilton
+    - Nicolas Gama
+    - Alexey Glivinsky
+
+"2026-11-05-at-lsu":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Gabriel Machuco
+    - Chloe Brothers
+    - Ethan Swart
+    - Lora Komoroczy
+    - Bradford Johnson
+    - Zetta Grace Bartee
+    - Alexey Glivinsky
+    - Warner Russ
+    - Mike Rice
+    - Matthew Hamilton
+
+"2026-11-20-tennessee-diving-invitational":
+  region: USA
+  clubs:
+    - Auburn University
+  swimmers:
+    - Peder Hubred
+    - Juliette Landi
+    - Emily Hallifax
+    - Ethan Swart
+    - Chloe Brothers
+
 "2026-11-21-wolfpack-elite-invitational":
   region: USA
   clubs:
@@ -315,6 +387,9 @@
     - Katie Knight
 
 "2026-10-10-ireland-world-cup-tashkent":
+  clubs:
+    - Templeogue SC
+    - University of Tennessee
   swimmers:
     - Mona McSharry
     - Ellen Walshe
@@ -354,6 +429,9 @@
     - Zhoujie Liu
 
 "2026-10-17-ireland-world-cup-astana":
+  clubs:
+    - Templeogue SC
+    - University of Tennessee
   swimmers:
     - Mona McSharry
     - Ellen Walshe

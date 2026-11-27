@@ -42,7 +42,7 @@ The story, then results tables, then a Sources list of URLs.
 - `title`, `meet`, `location`, `summary`, `region`, `clubs`, and `swimmers` are optional.
 - `region` is a short label such as `Northern Ireland`, `South West England`, `Ireland`, or `USA`.
 - `clubs` and `swimmers` are YAML lists. Name the swimmers the story is about, not every row of a results table.
-- An article with no `region` whose club is `Auburn University` is treated as `USA`.
+- An article in `articles/` with no `region` in its front matter or in `_data/article_tags.yml` is treated as region `USA` and club `Auburn University`. Those are the Auburn recaps, which omit a region.
 - A missing title falls back to the file name, and a missing date falls back to the date in the file name.
 - Keep the opening `#` headline. It repeats `title`, and the site shows that title once.
 - Wide results tables scroll sideways on small screens.
@@ -56,7 +56,7 @@ The Articles page can filter by region, club, swimmer, and meet, and can search 
 
 Files in `articles/` are synced from writers’ folders. A repo copy that differs is overwritten, so do not add tags by editing those files in the repo.
 
-Put tags for an existing file in [`_data/article_tags.yml`](_data/article_tags.yml). The key is the filename without `.md`. Those lists are merged with any `clubs` and `swimmers` in the article. A `region` in this file is used only when the article does not set one.
+Put tags for an existing file in [`_data/article_tags.yml`](_data/article_tags.yml). The key is the filename without `.md`. Those lists are merged with any `clubs` and `swimmers` in the article. A `region` in this file is used only when the article does not set one. An article that still has no region is listed as USA and Auburn University, so a newly synced Auburn recap appears under those filters before anyone adds its swimmers.
 
 ```yaml
 "2026-11-21-wolfpack-elite-invitational":
