@@ -2,8 +2,9 @@
   Sets field_slug, field_title, field_date, field_meet, field_location,
   field_summary, field_region, field_clubs, and field_swimmers for include.item.
   Clubs and swimmers are the union of front matter and _data/article_tags.yml.
-  Region uses front matter, then the data file. An Auburn article with no
-  region is USA.
+  Region uses front matter, then the data file. An article in articles/
+  with no region in either place is USA, and Auburn University is added
+  to its clubs. Only those synced Auburn recaps omit a region.
 {%- endcomment -%}
 {%- assign item = include.item -%}
 {%- assign field_slug = item.name | split: "." | first -%}
@@ -95,11 +96,14 @@
     {%- endfor -%}
   {%- endif -%}
 {%- endfor -%}
-{%- if field_region == "" -%}
+{%- assign field_top = item.path | split: "/" | first -%}
+{%- if field_region == "" and field_top == "articles" -%}
+  {%- assign field_region = "USA" -%}
+  {%- assign has_auburn = false -%}
   {%- for club in field_clubs -%}
-    {%- assign club_key = club | downcase -%}
-    {%- if club_key == "auburn university" -%}
-      {%- assign field_region = "USA" -%}
-    {%- endif -%}
+    {%- if club == "Auburn University" -%}{% assign has_auburn = true %}{%- endif -%}
   {%- endfor -%}
+  {%- unless has_auburn -%}
+    {%- assign field_clubs = field_clubs | push: "Auburn University" -%}
+  {%- endunless -%}
 {%- endif -%}
